@@ -86,8 +86,10 @@ class Agent(Thing):
         self.performance = 0
         if program is None or not isinstance(program, collections.abc.Callable):
             print("Can't find a valid program for {}, falling back to default.".format(self.__class__.__name__))
+
             def program(percept):
                 return eval(input('Percept={}; action? '.format(percept)))
+
         self.program = program
 
     def can_grab(self, thing):
@@ -505,7 +507,7 @@ class XYEnvironment(Environment):
             agent.bump = self.move_to(agent, agent.direction.move_forward(agent.location))
         elif action == 'Grab':
             things = [thing for thing in self.list_things_at(agent.location) if agent.can_grab(thing)]
-            if things:    
+            if things:
                 agent.holding.append(things[0])
                 print("Grabbing ", things[0].__class__.__name__)
                 self.delete_thing(things[0])
@@ -957,7 +959,7 @@ class WumpusEnvironment(XYEnvironment):
 
         if isinstance(agent, Explorer) and self.in_danger(agent):
             return
-            
+
         agent.bump = False
         if action in ['TurnRight', 'TurnLeft', 'Forward', 'Grab']:
             super().execute_action(agent, action)
