@@ -32,7 +32,7 @@ class Park2D(agents.GraphicEnvironment):
                 "народився":lambda :self.action(action, "народився", 'народився в локації: {}', agent, Born),
                 "робимо пз": lambda: self.action(action, "робимо пз", 'робимо пз в локації: {}', agent, WorkingOnPZ),
                 "зробили пз": lambda: self.action(action, "зробили пз", 'зробили пз в локації: {}', agent, СompletionPZ),
-                "тепер можна і вмерти": lambda: self.action(action, "тепер можна і вмерти", 'Вмираємо в локації: {}', agent, Die)
+                "тепер можна і вмерти": lambda: self.action(action, "тепер можна і вмерти", 'Тепер можна і вмерти в локації: {}', agent, Die)
                       }
             Action[action]()
 
