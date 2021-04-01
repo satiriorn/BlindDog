@@ -1,14 +1,12 @@
 import agents, random
 
-class Clean(agents.Thing):
-    pass
-
-class Dirty(agents.Thing):
-    pass
+class Clean(agents.Thing): pass
+class Dirty(agents.Thing): pass
 
 class Park2D(agents.GraphicEnvironment):
-    moveR, startloc  = True, False
-
+    moveR, moveD, startloc  = True, True, False
+    locationsquare = [0, 1]
+    level = 1
     def percept(self, agent): return self.list_things_at(agent.location)
 
     def execute_action(self, agent, action):
@@ -16,20 +14,8 @@ class Park2D(agents.GraphicEnvironment):
         print(agent.location)
         if self.startloc:
             if action == 'Continue':
-                agent.performance -= 1
-                if self.moveR and agent.location[0] != self.width-1:
-                    agent.location[0] += 1
-                elif self.moveR and agent.location[0] == self.width-1:
-                    self.moveR = False
-                    agent.location[1] += 1
-                elif agent.location[0] != 0 and self.moveR== False:
-                    agent.location[0] -= 1
-                elif agent.location[0] == 0 and self.moveR== False:
-                    self.moveR = True
-                    agent.location[1] += 1
-                elif agent.location[0] == self.width-1 and agent.location[1] == self.width-1 or agent.location[0] == 0 and agent.location[1] == self.width-1 :
-                    print(agent.performance)
-                    self.is_done()
+                self.AgentSquare(agent)
+                self.AgentSnake(agent)
             elif action == 'Suck':
                 self.LastLocationDirty = agent.location
                 self.add_thing(Clean(), agent.location)
@@ -40,6 +26,42 @@ class Park2D(agents.GraphicEnvironment):
             elif agent.location[0] != 0: agent.location[0] -= 1
             elif agent.location[1] + agent.location[0] == 0: self.startloc = True
 
+    def AgentSnake(self, agent):
+        agent.performance -= 1
+        if self.moveR and agent.location[0] != self.width - 1: agent.location[0] += 1
+        elif self.moveR and agent.location[0] == self.width - 1:
+            self.moveR = False
+            agent.location[1] += 1
+        elif agent.location[0] != 0 and self.moveR == False: agent.location[0] -= 1
+        elif agent.location[0] == 0 and self.moveR == False:
+            self.moveR = True
+            agent.location[1] += 1
+        elif agent.location[0] == self.width - 1 and agent.location[1] == self.width - 1 or agent.location[0] == 0 and \
+                agent.location[1] == self.width - 1:
+            print(agent.performance)
+            self.is_done()
+
+    def AgentSquare(self, agent):
+        if self.moveD == False and self.moveR == False and agent.location == self.locationsquare:
+            for x in range(len(self.locationsquare)):self.locationsquare[x]+=1
+            self.level +=1
+            self.moveR = True
+        if self.locationsquare ==[self.level-1, self.level]:
+            print(agent.performance)
+            self.is_done()
+        agent.performance -= 1
+        if self.moveR and agent.location[0] != self.width - self.level: agent.location[0] += 1
+        elif self.moveR and agent.location[0] == self.width - self.level:
+            self.moveR = False
+            self.moveD = True
+            agent.location[1] += 1
+        elif self.moveD and agent.location[1] != self.height - self.level: agent.location[1] += 1
+        elif self.moveD and agent.location[1] == self.height - self.level:
+            self.moveD = False
+            agent.location[0] -= 1
+        elif agent.location[0]!=self.locationsquare[0]: agent.location[0] -= 1
+        elif agent.location[0]==self.locationsquare[0]: agent.location[1] -= 1
+
     def is_done(self):
         no_edibles = not any(isinstance(thing, Clean) or isinstance(thing, Dirty) for thing in self.things)
         dead_agents = not any(agent.is_alive() for agent in self.agents)
@@ -47,8 +69,8 @@ class Park2D(agents.GraphicEnvironment):
 
 
 class RobotVacuum(agents.Agent):
-    Score = 0
     location = [random.randint(2, 7), random.randint(2, 7)]
+    AgentSnake = False
 
 def program(percepts):
     for p in percepts:
@@ -64,6 +86,6 @@ def main():
         for y in range(10):
             park.add_thing((lambda: Clean() if random.randint(0, 1) == 0 else Dirty())(), [x, y])
     park.add_thing(robot, robot.location)
-    park.run(300)
+    park.run(250)
 
 main()
