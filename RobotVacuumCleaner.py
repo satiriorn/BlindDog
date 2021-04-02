@@ -15,7 +15,7 @@ class Park2D(agents.GraphicEnvironment):
         if self.startloc:
             if action == 'Continue':
                 self.AgentSquare(agent)
-                self.AgentSnake(agent)
+                #self.AgentSnake(agent)
             elif action == 'Suck':
                 self.LastLocationDirty = agent.location
                 self.add_thing(Clean(), agent.location)
