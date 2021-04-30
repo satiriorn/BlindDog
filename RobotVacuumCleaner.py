@@ -1,5 +1,6 @@
 import agents, random
-
+for x in range(2):
+    print(x)
 class Clean(agents.Thing): pass
 class Dirty(agents.Thing): pass
 
@@ -14,8 +15,8 @@ class Park2D(agents.GraphicEnvironment):
         print(agent.location)
         if self.startloc:
             if action == 'Continue':
-                self.AgentSquare(agent)
-                #self.AgentSnake(agent)
+                #self.AgentSquare(agent)
+                self.AgentSnake(agent)
             elif action == 'Suck':
                 self.LastLocationDirty = agent.location
                 self.add_thing(Clean(), agent.location)
@@ -28,7 +29,8 @@ class Park2D(agents.GraphicEnvironment):
 
     def AgentSnake(self, agent):
         agent.performance -= 1
-        if self.moveR and agent.location[0] != self.width - 1: agent.location[0] += 1
+        if self.moveR and agent.location[0] != self.width - 1:
+                agent.location[0] += 1
         elif self.moveR and agent.location[0] == self.width - 1:
             self.moveR = False
             agent.location[1] += 1
@@ -87,5 +89,4 @@ def main():
             park.add_thing((lambda: Clean() if random.randint(0, 1) == 0 else Dirty())(), [x, y])
     park.add_thing(robot, robot.location)
     park.run(250)
-
 main()

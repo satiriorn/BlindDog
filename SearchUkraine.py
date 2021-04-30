@@ -33,7 +33,7 @@ Ukraine_map.locations = dict(
 
 Ukraine_locations = Ukraine_map.locations
 print(Ukraine_locations)
-# node colors, node positions and node label positions
+
 node_colors = {node: 'white' for node in Ukraine_map.locations.keys()}
 node_positions = Ukraine_map.locations
 node_label_pos = {k: [v[0], v[1] - 10] for k, v in Ukraine_map.locations.items()}
@@ -55,3 +55,4 @@ Ukraine_problem = GraphProblem('Kyiv', 'Chernihiv', Ukraine_map)
 display_visual(Ukraine_graph_data, user_input=False,
                algorithm=astar_search_graph,
                problem=Ukraine_problem)
+

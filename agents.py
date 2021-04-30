@@ -79,11 +79,12 @@ class Agent(Thing):
     which is a number giving the performance measure of the agent in its
     environment."""
 
-    def __init__(self, program=None):
+    def __init__(self, program=None, loc_p = None):
         self.alive = True
         self.bump = False
         self.holding = []
         self.performance = 0
+        self.location_point = loc_p
         if program is None or not isinstance(program, collections.abc.Callable):
             print("Can't find a valid program for {}, falling back to default.".format(self.__class__.__name__))
 
@@ -769,7 +770,6 @@ class TrivialVacuumEnvironment(Environment):
     or Clean. The agent perceives its location and the location's
     status. This serves as an example of how to implement a simple
     Environment."""
-
     def __init__(self):
         super().__init__()
         self.status = {loc_A: random.choice(['Clean', 'Dirty']),
